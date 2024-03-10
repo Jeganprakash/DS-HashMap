@@ -1,7 +1,6 @@
 package hashmap
 
 import java.lang.RuntimeException
-import java.security.Key
 
 class HashMap {
     private var tableSize = 1000
@@ -16,15 +15,14 @@ class HashMap {
         this.hashTable = arrayOfNulls(tableSize)
     }
 
-
-    fun get(key: Int):Int?{
+    fun get(key: Int): Int? {
         return getEntryForKey(key)?.let { getValue(it) }
     }
 
-    fun put(key: Int,value: Int){
+    fun put(key: Int, value: Int) {
         var indexToInsert = hashFunction(key)
         val initialIndex = indexToInsert
-        while(true){
+        while (true) {
             val entryAtIndex = getEntryAtIndex(indexToInsert)
 
             if (entryAtIndex == null || getKey(entryAtIndex) == key) {
@@ -38,47 +36,45 @@ class HashMap {
                 throw RuntimeException("no space in hashMap")
             }
         }
-
     }
 
-    fun containsKey(key: Int):Boolean{
+    fun containsKey(key: Int): Boolean {
         getEntryForKey(key)?.let {
             return true
         }
         return false
     }
 
-    private fun hashFunction(key:Int):Int {
+    private fun hashFunction(key: Int): Int {
         return key % tableSize
     }
 
-    private fun nextIndex(index: Int):Int{
+    private fun nextIndex(index: Int): Int {
         return (index + 1) % tableSize
     }
 
-    private fun getEntryAtIndex(index: Int) : Pair<Int,Int?>?{
+    private fun getEntryAtIndex(index: Int): Pair<Int, Int?>? {
         return hashTable[index]
     }
 
-    private fun getKey(entry: Pair<Int,Int?>) : Int{
+    private fun getKey(entry: Pair<Int, Int?>): Int {
         return entry.first
     }
 
-    private fun getValue(entry: Pair<Int,Int?>) : Int?{
+    private fun getValue(entry: Pair<Int, Int?>): Int? {
         return entry.second
     }
 
-    private fun setKeyAndValue(entry: Pair<Int,Int?>,index: Int){
+    private fun setKeyAndValue(entry: Pair<Int, Int?>, index: Int) {
         hashTable[index] = entry
     }
 
-
-    private fun getEntryForKey(key: Int):Pair<Int,Int?>?{
+    private fun getEntryForKey(key: Int): Pair<Int, Int?>? {
         var indexToSeek = hashFunction(key)
         val initialIndex = indexToSeek
         do {
             val keyAndValue = getEntryAtIndex(indexToSeek) ?: return null
-            if(getKey(keyAndValue) == key){
+            if (getKey(keyAndValue) == key) {
                 return keyAndValue
             } else {
                 indexToSeek = nextIndex(indexToSeek)

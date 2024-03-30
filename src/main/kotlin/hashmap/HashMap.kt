@@ -2,9 +2,9 @@ package hashmap
 
 import java.lang.RuntimeException
 
-class HashMap {
+class HashMap<K,V> {
     private var tableSize = 1000
-    private lateinit var hashTable: Array<Pair<Int, Int?>?>
+    private var hashTable: Array<Pair<K, V?>?>
 
     constructor(size: Int) : this() {
         this.tableSize = size
@@ -15,11 +15,11 @@ class HashMap {
         this.hashTable = arrayOfNulls(tableSize)
     }
 
-    fun get(key: Int): Int? {
+    fun get(key: K): V? {
         return getEntryForKey(key)?.let { getValue(it) }
     }
 
-    fun put(key: Int, value: Int) {
+    fun put(key: K, value: V) {
         var indexToInsert = hashFunction(key)
         val initialIndex = indexToInsert
         while (true) {
@@ -38,38 +38,38 @@ class HashMap {
         }
     }
 
-    fun containsKey(key: Int): Boolean {
+    fun containsKey(key: K): Boolean {
         getEntryForKey(key)?.let {
             return true
         }
         return false
     }
 
-    private fun hashFunction(key: Int): Int {
-        return key % tableSize
+    private fun hashFunction(key: K): Int {
+        return key.hashCode() % tableSize
     }
 
     private fun nextIndex(index: Int): Int {
         return (index + 1) % tableSize
     }
 
-    private fun getEntryAtIndex(index: Int): Pair<Int, Int?>? {
+    private fun getEntryAtIndex(index: Int): Pair<K, V?>? {
         return hashTable[index]
     }
 
-    private fun getKey(entry: Pair<Int, Int?>): Int {
+    private fun getKey(entry: Pair<K, V?>): K {
         return entry.first
     }
 
-    private fun getValue(entry: Pair<Int, Int?>): Int? {
+    private fun getValue(entry: Pair<K, V?>): V? {
         return entry.second
     }
 
-    private fun setKeyAndValue(entry: Pair<Int, Int?>, index: Int) {
+    private fun setKeyAndValue(entry: Pair<K, V?>, index: Int) {
         hashTable[index] = entry
     }
 
-    private fun getEntryForKey(key: Int): Pair<Int, Int?>? {
+    private fun getEntryForKey(key: K): Pair<K, V?>? {
         var indexToSeek = hashFunction(key)
         val initialIndex = indexToSeek
         do {
